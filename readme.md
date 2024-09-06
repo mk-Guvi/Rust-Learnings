@@ -53,3 +53,11 @@
 
 -- **Semantic Versions**:
    Rust crates use semantic versioning. For example, in version 0.8.6, the 0 refers to the major version, indicating changes that might remove old functionalities. The 8 refers to the minor version, representing updates that add new features without breaking existing functionality. The 6 refers to the patch version, which addresses bug fixes.  
+
+
+-- **Shadowing Variables**:  
+   In Rust, you can declare a new variable with the same name as a previous one, with the second declaration "shadowing" the first. This means the compiler only recognizes the most recent version of the variable. Shadowing allows you to reference the original value in the new variable. A common use case is making a variable immutable after performing some operations. Unlike with `mut`, shadowing allows you to change the type of the value. This behavior is demonstrated in the guessing game program.  
+   
+   Example: `let a = 2; let a = a + 2; println!("a value is {a}");` // Outputs 4.  
+   
+   Although you could achieve a similar result by using different variable names (e.g., `let a = 2; let a_readonly = a;`), this can create confusion over which variable to use. Shadowing provides a cleaner and more efficient solution.

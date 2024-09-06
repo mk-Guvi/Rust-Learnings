@@ -17,7 +17,7 @@ fn main() {
 
         println!("Thanks"); // This will print on a new line since the input in `guess` includes a trailing newline (`\n`).
 
-        let guess: u32 = match guess.trim().parse() {
+        let guess: u32 = match guess.trim().parse() {//shadowing guess variable to make rest of the code to be readonly.
             Ok(num) => num,
             Err(_) => {
                 println!("Invalid input. Please enter a valid number.");
