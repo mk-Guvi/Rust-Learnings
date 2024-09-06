@@ -29,6 +29,13 @@
    `cargo build --release`  
    This will create optimized executables in the `./target/release` directory. Since this process takes more time than a standard build, it's typically used for production, while `cargo build` is preferred for development.
 
+9. **Add rand Crate**:
+   `cargo add rand`
+   This will add rand crate.
+
+10. **Add rand Crate**:
+   `cargo doc --open`
+   This opens the docs of all the crates used.
 ### Notes:
 
 - **Macros**:  
@@ -38,3 +45,11 @@
 - **Standalone Executables**:  
   Rust-generated executable files can run on systems without Rust installed, unlike some other languages (e.g., Python, JavaScript), which require their respective runtime environments.
 
+- **Prelude**:  
+  Rust provides a set of commonly used methods and traits that are available in the global scope by default. This collection is known as the Prelude. For example, the `String::new` method is part of the Prelude.
+
+- **Crates**:  
+  Crates are collections of Rust code. There are two types of crates: binary crates and library crates. Binary crates can be executed directly, while library crates are meant to be integrated into projects but cannot be executed on their own.
+
+-- **Semantic Versions**:
+   Rust crates use semantic versioning. For example, in version 0.8.6, the 0 refers to the major version, indicating changes that might remove old functionalities. The 8 refers to the minor version, representing updates that add new features without breaking existing functionality. The 6 refers to the patch version, which addresses bug fixes.  
