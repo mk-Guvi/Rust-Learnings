@@ -93,6 +93,8 @@
       - **Byte (`u8` only)**: `b'A'`
 
       #### Handling Integer Overflow
+      In Rust, integer overflow errors are raised in Debug mode (`cargo run`), but in Release mode (`cargo run --release`), instead of throwing an error, the value undergoes 2's complement wrapping.
+      
       Rust provides several methods to handle integer overflow, especially in **debug mode**:
 
       - **`wrapping_add()`**: Wraps around on overflow.
@@ -182,3 +184,56 @@
    ```
 
    Accessing an index that is out of bounds will result in a **runtime error**. While the code will compile successfully, an error will be thrown if you attempt to access an invalid index during execution.
+
+
+### Rust Functions
+
+   - **Functions** 
+      In Rust, functions are defined using the `fn` keyword, with names written in snake_case. A function signature specifies its name, parameters, and return type.
+
+      Example:
+         ```rust
+         fn main() {
+            another_function();
+         }
+
+         fn another_function() {
+            println!("Another function.");
+         }
+         ```
+
+   - **Parameters** are defined in the function signature, and their types must be specified:
+      ```rust
+      fn another_function(x: i32) {
+         println!("The value of x is: {x}");
+      }
+      ```
+
+   - **Statements** perform actions but don’t return values, while **expressions** must return a value.The function declaration itself is a statement.
+      ```rust
+      let y = {
+         let x = 3;
+         x + 1 // Expression returns 4
+      };
+      ```
+
+      ```rust
+      let y = {
+         let x = 3;
+         return x + 1; // Expression returns 4
+      };
+      ```
+
+   - Functions can have **return values**, specified with `->`. The last expression is returned:
+      ```rust
+      fn five() -> i32 {
+         5 // Implicit return
+      }
+      ```
+
+   - Avoid adding semicolons to the final expression, as it converts it into a statement and prevents returning a value:
+      ```rust
+      fn plus_one(x: i32) -> i32 {
+         x + 1 // Correct
+      }
+      ```
