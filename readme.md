@@ -94,7 +94,7 @@
 
       #### Handling Integer Overflow
       In Rust, integer overflow errors are raised in Debug mode (`cargo run`), but in Release mode (`cargo run --release`), instead of throwing an error, the value undergoes 2's complement wrapping.
-      
+
       Rust provides several methods to handle integer overflow, especially in **debug mode**:
 
       - **`wrapping_add()`**: Wraps around on overflow.
@@ -237,3 +237,134 @@
          x + 1 // Correct
       }
       ```
+
+### Control Flows
+
+   - **If Expressions**
+
+      In Rust, the blocks associated with an `if` statement are called **arms**. The condition in an `if` expression must always evaluate to a boolean. For example:
+
+      - Correct: `let a = 1; if (a == 1) { ... }`
+      - Incorrect: `if (a) { ... }` (since `a` is not a boolean)
+
+      In Rust, `if` is an **expression**, meaning it must return a value, unlike a statement. When using `if` as an expression, an `else` block is required, and both the `if` and `else` arms must return the same data type.
+
+      **Example:**
+
+      ```rust
+      let y = 1;
+      let x = if y > 1 {
+         true
+      } else {
+         false
+      };
+      ```
+   - **Loops**
+
+   Rust provides three types of loops: `loop`, `while`, and `for`.
+
+      - **Loop Expression**
+
+         The `loop` keyword tells Rust to continuously execute a block of code. You can use `break` to exit the loop and `continue` to skip to the next iteration. When using `loop` as an expression, you need to return a value. 
+
+         **Example:**
+
+         ```rust
+         let mut n = 0;
+         let x = loop {
+            n += 1;
+            if n > 2 {
+               break 2;
+            }
+         };
+         ```
+
+         #### **Labeled Loops**
+
+         You can assign labels to loops, which allow you to control and break out of specific loops in nested loop scenarios. If you want to break the parent loop based on conditions in a child loop, you can use a label.
+
+         **Example:**
+
+         ```rust
+         let mut n = 0;
+         let x = 'first_loop: loop {
+            n += 1;
+
+            if n > 10 {
+               break 2;
+            }
+
+            loop {
+               if n == 5 {
+                     break 'first_loop 5;
+               }
+            }
+         };
+         ```
+
+         In this example, the inner loop breaks the outer `first_loop` when `n` equals 5.
+      
+      - **While Loop**
+
+         Use a `while` loop when you know the exit condition but not the exact number of iterations.
+
+         #### Example: Loop vs While
+
+         **Using `loop`**:
+         ```rust
+         let mut count = 0;
+         loop {
+            count += 1;
+            if count == 5 {
+               break;
+            }
+         }
+         ```
+
+         **Using `while`**:
+         ```rust
+         let mut count = 0;
+         while count < 5 {
+            count += 1;
+         }
+         ```
+
+         **When to use:**
+         - Use `loop` for indefinite repetition with manual control over exit.
+         - Use `while` when the loop depends on a condition to exit automatically.
+
+      - **For Loop Expression**
+
+         you can use a `while` loop to iterate over an array, it requires checking the index on each iteration, which is less efficient. Using a `for` loop is a better approach since it automatically handles array bounds and is more efficient.
+
+         #### Example: Iterating over an array with `while` vs `for`
+
+         **Using `while`:**
+         ```rust
+         let arr = [1, 2, 3, 4, 5];
+         let mut index = 0;
+         while index < arr.len() {
+            println!("{}", arr[index]);
+            index += 1;
+         }
+         ```
+
+         **Using `for`:**
+         ```rust
+         let arr = [1, 2, 3, 4, 5];
+         for element in arr {
+            println!("{}", element);
+         }
+         ```
+
+         #### Iterating with a Range in `for`
+
+         You can also iterate over a range of numbers using a `for` loop.
+
+         ```rust
+         for i in 0..=5 {
+            println!("{}", i);
+         }
+         ```
+
+         In this example, the loop iterates from `0` to `5`. 
