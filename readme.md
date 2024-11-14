@@ -368,3 +368,170 @@
          ```
 
          In this example, the loop iterates from `0` to `5`. 
+
+# Rust Memory Management: Ownership, References, and Borrowing
+
+   Ownership is the set of rules that defines how the rust manages the memory. Memory is manages through a system of ownership with a set of rules that compiler checks. If any of the rules is violated, the program won't compile.
+
+   #### **Stack vs Heap(Allocation)**
+
+      The **stack** is used to store data of fixed size, such as `let a = 10;`. In contrast, the **heap** is used for data with a variable size, like `let b = String::new()`, where the size can change based on user input.
+
+      **Example:**
+
+      ```rust
+      let a = 10;
+      let b = String::new();
+      ```
+
+      In this example:
+      - `a` (with a value of 10) is stored directly on the stack.
+      - `b` is stored on the stack as a reference, while its actual data is allocated in the heap. This allows for dynamic memory management based on the input size.
+
+      ```rust
+      let mut s = "Rust";
+      ```
+      Here, `s` is stored on the **stack**, and while you can change its value entirely, you cannot modify or adjust its contents (like pushing or popping).
+
+      ```rust
+      let mut d = String::from("Rust");
+      d.push_str(" is a language!");
+      ```
+      In this case, `d` is stored on the **heap**, allowing you to dynamically modify its size, like pushing or popping characters.    
+
+   ### Key Differences: Stack vs Heap
+
+      | Feature          | Stack                          | Heap                                |
+      |------------------|--------------------------------|-------------------------------------|
+      | **Memory Size**  | Limited and fixed              | Larger and flexible                 |
+      | **Allocation**   | Automatic (managed by the system) | Manual (managed by the programmer)  |
+      | **Speed**        | Faster                         | Slower                             |
+      | **Scope**        | Local to function/block        | Accessible until explicitly freed   |
+      | **Lifetime**     | Short (limited to function/block) | Can persist longer if not deallocated |
+
+   ### Ownership Rules
+
+   - Every value in Rust has a single owner.
+   - There can only be one owner at a time.
+   - When the owner goes out of scope, the value is dropped.
+
+
+   In Rust, memory is automatically freed when ownership is removed.
+
+   #### Example:
+   ```rust
+   fn main() {
+      fn call() {
+         let a = "Rust";//These are immutable meaning you can not push or append the characters
+      }
+      call();
+   }
+   ```
+
+   In this example, the memory for `a` is automatically freed once the `call` function completes and the variable goes out of scope. You can manually free memory using `drop(a)`, but Rust automatically calls this function when ownership is removed, such as when the owner goes out of scope.
+
+
+   ### 1. Ownership
+
+   In Rust, each piece of data has a single owner: a variable that manages its memory. When ownership of data is transferred (or "moved"), the original variable can no longer access it.
+
+   #### Example
+
+   ```rust
+   fn main() {
+      let s1 = String::from("hello");
+      let s2 = s1; // Ownership of "hello" is moved from s1 to s2
+      
+      // println!("{}", s1); // This will cause an error because s1 no longer owns the data
+      println!("s2 is: {}", s2); // s2 now has full ownership of the data
+   }
+   ```
+
+   In this example, `s1` transfers ownership of the `String` "hello" to `s2`. Attempting to use `s1` after the transfer will cause an error, as Rust deactivates `s1` to prevent multiple ownerships, avoiding potential memory issues.
+
+   ### 2. References and Borrowing
+
+      Rust allows data access through references, enabling borrowing data without taking ownership. References can be immutable or mutable, but only one mutable reference to a variable is allowed at a time to prevent data races .A data race is similar to a race condition and happens when these three behaviors occur:
+
+      - Two or more pointers access the same data at the same time.
+      - At least one of the pointers is being used to write to the data.
+      - There’s no mechanism being used to synchronize access to the data.
+
+
+   #### Example of Immutable Reference
+
+   ```rust
+   fn main() {
+      let s = String::from("hello");
+      let len = calculate_length(&s); // Passing an immutable reference to s
+      println!("The length of '{}' is {}.", s, len);
+   }
+
+   fn calculate_length(s: &String) -> usize {
+      s.len() // Accessing length of s without taking ownership
+   }
+   ```
+
+   Here, `calculate_length` borrows `s` without taking ownership. Since the reference is immutable (`&s`), the function can read `s` but not modify it. This allows safe sharing of data.
+
+   #### Example of Mutable Reference
+
+   ```rust
+   fn main() {
+      let mut s = String::from("hello");
+      change(&mut s); // Passing a mutable reference to s
+      println!("Modified string is '{}'", s);
+   }
+
+   fn change(s: &mut String) {
+      s.push_str(", world"); // Mutating the borrowed data
+   }
+   ```
+
+   In this example, `change` takes a mutable reference to `s` (`&mut s`), allowing it to modify `s`’s contents. Rust enforces that there can only be one active mutable reference to `s` to avoid concurrent mutations, ensuring data integrity.
+
+   ### 3. Ownership and Functions
+
+   When data is passed to a function, ownership is transferred, meaning the function now controls the variable. To regain control, the function must return ownership back.
+
+   #### Example
+
+   ```rust
+   fn main() {
+      let s = String::from("hello");
+      let s = takes_and_gives_back(s); // Ownership is moved and then returned
+      println!("s is back with content: {}", s);
+   }
+
+   fn takes_and_gives_back(s: String) -> String {
+      println!("s is used here: {}", s);
+      s // Ownership is returned to the caller
+   }
+   ```
+
+   The function `takes_and_gives_back` accepts ownership of `s` and then returns it, allowing `s` to be used again in `main`.
+
+   ### 4. Dangling References
+
+   A dangling reference occurs when a reference points to data that has been deallocated. Rust prevents dangling references at compile time by ensuring that data outlives all references to it.
+
+   #### Example
+
+   ```rust
+   fn main() {
+      let reference_to_nothing = dangle();
+   }
+
+   // This function will cause a compile error
+   fn dangle() -> &String {
+      let s = String::from("hello");
+      &s // Error: `s` is dropped here and we return a reference to it
+   }
+   ```
+
+   Here, `dangle` tries to return a reference to `s`, but `s` is dropped when `dangle` finishes. This would leave the returned reference pointing to invalid memory. Rust’s compiler catches this error, enforcing memory safety by disallowing the creation of dangling references.
+
+
+
+
+      
